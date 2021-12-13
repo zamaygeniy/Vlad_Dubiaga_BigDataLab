@@ -2,7 +2,7 @@ package com.epam.crimes.entity;
 
 import java.util.Objects;
 
-public class Street{
+public class Street extends Entity {
     private int id;
     private String name;
 

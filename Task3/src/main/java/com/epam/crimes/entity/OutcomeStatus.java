@@ -1,9 +1,10 @@
 package com.epam.crimes.entity;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Date;
 import java.util.Objects;
-
-public class OutcomeStatus {
+public class OutcomeStatus extends Entity {
     private int id;
     private String category;
     private Date date;

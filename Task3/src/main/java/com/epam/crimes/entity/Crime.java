@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Date;
 import java.util.Objects;
 
-public class Crime {
+public class Crime extends Entity {
     private String category;
     private Location location;
     @SerializedName("location_type")
@@ -19,6 +19,11 @@ public class Crime {
     private OutcomeStatus outcomeStatus;
     private String context;
     private Date month;
+
+    public Crime(){
+        this.setLocation(new Location());
+        this.setOutcomeStatus(new OutcomeStatus());
+    }
 
     @Override
     public boolean equals(Object o) {

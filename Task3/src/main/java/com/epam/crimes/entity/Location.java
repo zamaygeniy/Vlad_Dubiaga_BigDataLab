@@ -2,10 +2,14 @@ package com.epam.crimes.entity;
 
 import java.util.Objects;
 
-public class Location{
+public class Location extends Entity {
     private double latitude;
     private double longitude;
     private Street street;
+
+    public Location(){
+        this.setStreet(new Street());
+    }
 
     @Override
     public boolean equals(Object o) {
