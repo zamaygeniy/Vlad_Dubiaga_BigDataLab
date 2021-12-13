@@ -20,7 +20,7 @@ public class JsonUtils {
         Crime[] crimes = null;
         try (BufferedInputStream in = new BufferedInputStream(url.openStream())) {
             content = IOUtils.toString(in, "UTF-8");
-            crimes = new GsonBuilder().setDateFormat("yyyy-mm").create().fromJson(content, Crime[].class);
+            crimes = new GsonBuilder().setDateFormat("yyyy-MM").create().fromJson(content, Crime[].class);
         } catch (IOException e) {
             e.printStackTrace();
         }
