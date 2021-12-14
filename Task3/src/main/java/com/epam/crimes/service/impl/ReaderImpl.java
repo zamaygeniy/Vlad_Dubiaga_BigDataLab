@@ -17,10 +17,10 @@ public class ReaderImpl implements Reader {
     public static final String DOUBLE_REGEX = "-?\\d+\\.?\\d+";
 
     @Override
-    public List<Double> readFromFile(String filename) {
+    public List<Double> readCoordinatesFromFile(String filename) {
         Path path = Paths.get(filename);
         List<Double> list = new ArrayList<>();
-        try(BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
+        try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
             String line = reader.readLine();
             Pattern pattern = Pattern.compile(DOUBLE_REGEX);
             while (line != null) {
@@ -32,7 +32,6 @@ public class ReaderImpl implements Reader {
             }
         } catch (IOException e) {
             e.printStackTrace();
-
         }
         return list;
     }

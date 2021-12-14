@@ -4,6 +4,6 @@ import java.util.List;
 
 public interface Reader {
 
-    List<Double> readFromFile(String path);
+    List<Double> readCoordinatesFromFile(String path);
 
 }

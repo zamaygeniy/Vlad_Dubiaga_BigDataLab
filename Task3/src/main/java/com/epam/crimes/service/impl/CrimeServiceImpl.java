@@ -22,7 +22,7 @@ public class CrimeServiceImpl implements CrimeService {
     }
 
     @Override
-    public List<Crime> findCrimes(){
+    public List<Crime> findCrimes() {
         CrimeDao crimeDao = new CrimeDaoImpl(DatabaseConnection.getInstance().getFluentJdbc());
         return crimeDao.findAll();
     }

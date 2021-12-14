@@ -6,7 +6,6 @@ import java.util.List;
 
 public interface JsonUtils {
 
-    public <T> List<T> parseUrl(URL url, Class<T[]> entityClass) throws IOException;
-
-
+    public <T> List<T> parseUrlContent(URL url, Class<T[]> entityClass) throws IOException;
+    public URL createURL(String path, String date);
 }

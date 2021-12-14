@@ -18,7 +18,7 @@ CREATE TABLE crimes_schema.outcome_status
 (
     id serial PRIMARY KEY,
     date date NOT NULL,
-    category character varying(60) NOT NULL
+    outcome_category character varying(60) NOT NULL
 );
 
 CREATE TABLE crimes_schema.crime
@@ -31,7 +31,7 @@ CREATE TABLE crimes_schema.crime
     longitude double precision NOT NULL,
     context text,
     location_subtype character varying(60),
-    outcome_status integer REFERENCES crimes_schema.outcome_status(id),
+    outcome_status_id integer REFERENCES crimes_schema.outcome_status(id),
     month date NOT NULL,
     FOREIGN KEY (latitude, longitude) REFERENCES crimes_schema.location(latitude, longitude)
 );
