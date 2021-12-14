@@ -17,6 +17,7 @@ public class DatabaseConnection {
         config.setUsername("postgres");
         config.setPassword("reverse");
         config.setSchema("crimes_schema");
+        config.setMaximumPoolSize(16);
         dataSource = new HikariDataSource(config);
         fluentJdbc = new FluentJdbcBuilder()
                 .connectionProvider(dataSource)

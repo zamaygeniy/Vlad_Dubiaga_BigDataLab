@@ -1,19 +1,15 @@
 package com.epam.crimes.control;
 
-import com.epam.crimes.entity.Crime;
 import com.epam.crimes.service.CrimeService;
-import com.epam.crimes.service.JsonUtils;
 import com.epam.crimes.service.impl.CrimeServiceImpl;
-import com.epam.crimes.service.impl.JsonUtilsImpl;
 import org.apache.commons.cli.*;
-
-import java.io.*;
-import java.net.URL;
-import java.util.List;
 import java.util.Properties;
 
+
 public class Main {
-    public static void main(String[] args) throws IOException, ParseException {
+
+    public static void main(String[] args) throws ParseException, InterruptedException {
+
         Options options = new Options();
         Option propertyOption = Option.builder()
                 .longOpt("D")
@@ -27,7 +23,7 @@ public class Main {
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd = parser.parse(options, args);
 
-        if (cmd.hasOption("h")){
+        if (cmd.hasOption("h")) {
             //TODO create help message;
             return;
         }
@@ -43,10 +39,8 @@ public class Main {
             category = properties.getProperty("category");
         }
 
-        JsonUtils jsonUtils = new JsonUtilsImpl();
-        URL url = jsonUtils.createURL(path, category, date);
-        List<Crime> crimes = jsonUtils.parseUrlContent(url, Crime[].class);
         CrimeService crimeService = new CrimeServiceImpl();
-        crimeService.createCrime(crimes);
+        crimeService.loadAllCrimesToDataBase(path, category, date);
+
     }
 }

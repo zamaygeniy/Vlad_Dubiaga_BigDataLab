@@ -1,7 +1,6 @@
 package com.epam.crimes.service.impl;
 
 import com.epam.crimes.service.JsonUtils;
-import com.epam.crimes.service.Reader;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -9,14 +8,15 @@ import org.slf4j.LoggerFactory;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.sql.Connection;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class JsonUtilsImpl implements JsonUtils {
 
@@ -26,54 +26,52 @@ public class JsonUtilsImpl implements JsonUtils {
 
     @Override
     public <T> List<T> parseUrlContent(URL url, Class<T[]> entityClass) throws IOException {
-        {
-            if (url == null) {
-                logger.error("URL is null");
-                return Collections.emptyList();
-            }
 
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            if (url.toString().length() >= 4094) {
-                connection.setRequestMethod("POST");
-            } else {
-                connection.setRequestMethod("GET");
-            }
+        if (url == null) {
+            logger.error("URL is null");
+            return Collections.emptyList();
+        }
 
-            connection.connect();
-            int code = connection.getResponseCode();
-            if (code >= 400) {
-                logger.error("Connection error. Code: {}. URL: {}", code, url);
-                return Collections.emptyList();
-            }
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        if (url.toString().length() >= 4094) {
+            connection.setRequestMethod("POST");
+        } else {
+            connection.setRequestMethod("GET");
+        }
 
-            T[] entity = null;
-            try (BufferedInputStream in = new BufferedInputStream(connection.getInputStream())) {
-                String content = IOUtils.toString(in, StandardCharsets.UTF_8);
-                entity = new GsonBuilder().setDateFormat("yyyy-MM").create().fromJson(content, entityClass);
-            }
-            if (entity != null) {
-                return Arrays.asList(entity);
-            } else {
-                logger.error("No valid data from: {}", url);
-                return Collections.emptyList();
-            }
+        connection.connect();
+
+        if (connection.getResponseCode() == 429) {
+            logger.error("Connection error. Code: {}. URL: {}", connection.getResponseCode(), url);
+            throw new ConnectException("Connection error. Code: 429. URL: " + url);
+        }
+
+        if (connection.getResponseCode() >= 400) {
+            logger.error("Connection error. Code: {}. URL: {}", connection.getResponseCode(), url);
+            return Collections.emptyList();
+        }
+
+        T[] entity;
+        try (BufferedInputStream in = new BufferedInputStream(connection.getInputStream())) {
+            String content = IOUtils.toString(in, StandardCharsets.UTF_8);
+            entity = new GsonBuilder().setDateFormat("yyyy-MM").create().fromJson(content, entityClass);
+        }
+        if (entity != null) {
+            return Arrays.asList(entity);
+        } else {
+            logger.error("No valid data from: {}", url);
+            return Collections.emptyList();
         }
     }
 
+
     @Override
-    public URL createURL(String path, String category, String date) {
+    public URL createURL(List<Double> coordinates, String category, String date) {
         StringBuilder url = new StringBuilder(API_METHOD);
 
-        if (category != null) {
-            url.append(category);
-        } else {
-            url.append("all-crime");
-        }
+        url.append(Objects.requireNonNullElse(category, "all-crime"));
 
-        if (path != null) {
-
-            Reader reader = new ReaderImpl();
-            List<Double> coordinates = reader.readCoordinatesFromFile(path);
+        if (!coordinates.isEmpty()) {
             if (coordinates.size() % 2 != 0) {
                 coordinates.remove(coordinates.size() - 1);
             }
@@ -85,7 +83,7 @@ public class JsonUtilsImpl implements JsonUtils {
                 }
                 url.deleteCharAt(url.length() - 1);
             } else {
-                url.append("?lat=").append(coordinates.get(0)).append("&lng=").append(coordinates.get(1));
+                url.append("?lng=").append(coordinates.get(0)).append("&lat=").append(coordinates.get(1));
             }
         }
 
