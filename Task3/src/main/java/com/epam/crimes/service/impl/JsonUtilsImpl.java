@@ -22,7 +22,7 @@ public class JsonUtilsImpl implements JsonUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(JsonUtilsImpl.class);
 
-    private static final String API_METHOD = "https://data.police.uk/api/crimes-street/all-crime";
+    private static final String API_METHOD = "https://data.police.uk/api/crimes-street/";
 
     @Override
     public <T> List<T> parseUrlContent(URL url, Class<T[]> entityClass) throws IOException {
@@ -61,23 +61,32 @@ public class JsonUtilsImpl implements JsonUtils {
     }
 
     @Override
-    public URL createURL(String path, String date) {
-        Reader reader = new ReaderImpl();
+    public URL createURL(String path, String category, String date) {
+        StringBuilder url = new StringBuilder(API_METHOD);
 
-        List<Double> coordinates = reader.readCoordinatesFromFile(path);
-        if (coordinates.size() % 2 != 0) {
-            coordinates.remove(coordinates.size() - 1);
+        if (category != null) {
+            url.append(category);
+        } else {
+            url.append("all-crime");
         }
 
-        StringBuilder url = new StringBuilder(API_METHOD);
-        if (coordinates.size() > 2) {
-            url.append("?poly=");
-            for (int i = 0; i < coordinates.size(); i += 2) {
-                url.append(coordinates.get(i)).append(",").append(coordinates.get(i + 1)).append(":");
+        if (path != null) {
+
+            Reader reader = new ReaderImpl();
+            List<Double> coordinates = reader.readCoordinatesFromFile(path);
+            if (coordinates.size() % 2 != 0) {
+                coordinates.remove(coordinates.size() - 1);
             }
-            url.deleteCharAt(url.length() - 1);
-        } else {
-            url.append("?lat=").append(coordinates.get(0)).append("&lng=").append(coordinates.get(1));
+
+            if (coordinates.size() > 2) {
+                url.append("?poly=");
+                for (int i = 0; i < coordinates.size(); i += 2) {
+                    url.append(coordinates.get(i)).append(",").append(coordinates.get(i + 1)).append(":");
+                }
+                url.deleteCharAt(url.length() - 1);
+            } else {
+                url.append("?lat=").append(coordinates.get(0)).append("&lng=").append(coordinates.get(1));
+            }
         }
 
         if (date != null) {
