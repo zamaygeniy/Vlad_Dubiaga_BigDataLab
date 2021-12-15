@@ -1,0 +1,17 @@
+/var/lib/pgsql/Vlad_Dubiaga_BigDataLab/Task3/src/main/java/com/epam/crimes/service/impl/ReaderImpl.java
+/var/lib/pgsql/Vlad_Dubiaga_BigDataLab/Task3/src/main/java/com/epam/crimes/connection/DatabaseConnection.java
+/var/lib/pgsql/Vlad_Dubiaga_BigDataLab/Task3/src/main/java/com/epam/crimes/dao/ColumnName.java
+/var/lib/pgsql/Vlad_Dubiaga_BigDataLab/Task3/src/main/java/com/epam/crimes/dao/AbstractDao.java
+/var/lib/pgsql/Vlad_Dubiaga_BigDataLab/Task3/src/main/java/com/epam/crimes/service/CrimeService.java
+/var/lib/pgsql/Vlad_Dubiaga_BigDataLab/Task3/src/main/java/com/epam/crimes/service/impl/JsonUtilsImpl.java
+/var/lib/pgsql/Vlad_Dubiaga_BigDataLab/Task3/src/main/java/com/epam/crimes/dao/CrimeDao.java
+/var/lib/pgsql/Vlad_Dubiaga_BigDataLab/Task3/src/main/java/com/epam/crimes/control/Main.java
+/var/lib/pgsql/Vlad_Dubiaga_BigDataLab/Task3/src/main/java/com/epam/crimes/entity/Location.java
+/var/lib/pgsql/Vlad_Dubiaga_BigDataLab/Task3/src/main/java/com/epam/crimes/service/JsonUtils.java
+/var/lib/pgsql/Vlad_Dubiaga_BigDataLab/Task3/src/main/java/com/epam/crimes/service/Reader.java
+/var/lib/pgsql/Vlad_Dubiaga_BigDataLab/Task3/src/main/java/com/epam/crimes/service/impl/CrimeServiceImpl.java
+/var/lib/pgsql/Vlad_Dubiaga_BigDataLab/Task3/src/main/java/com/epam/crimes/entity/Street.java
+/var/lib/pgsql/Vlad_Dubiaga_BigDataLab/Task3/src/main/java/com/epam/crimes/entity/OutcomeStatus.java
+/var/lib/pgsql/Vlad_Dubiaga_BigDataLab/Task3/src/main/java/com/epam/crimes/dao/impl/CrimeDaoImpl.java
+/var/lib/pgsql/Vlad_Dubiaga_BigDataLab/Task3/src/main/java/com/epam/crimes/entity/Entity.java
+/var/lib/pgsql/Vlad_Dubiaga_BigDataLab/Task3/src/main/java/com/epam/crimes/entity/Crime.java

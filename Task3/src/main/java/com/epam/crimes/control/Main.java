@@ -40,7 +40,7 @@ public class Main {
             Properties properties = cmd.getOptionProperties("D");
             path = properties.getProperty("path");
             date = properties.getProperty("date");
-            if (!date.matches("^((19|20)[0-9]{2})-(0[1-9]|1[012])$")){
+            if (date != null && !date.matches("^((19|20)[0-9]{2})-(0[1-9]|1[012])$")){
                 date = null;
             }
             category = properties.getProperty("category");

@@ -31,6 +31,7 @@ public class CrimeServiceImpl implements CrimeService {
             while (urls.peek() != null) {
                 URL url = urls.poll();
                 try {
+		    //System.out.println(Thread.currentThread().getName());
                     loadCrimeToDatabase(url, category, date);
                 } catch (ConnectException e) {
                     urls.add(url);
