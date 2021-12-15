@@ -1,4 +1,8 @@
 .idea/
 logs/
+<<<<<<< HEAD
 target/
+=======
+target
+>>>>>>> master
 *.iml

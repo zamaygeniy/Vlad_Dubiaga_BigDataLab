@@ -1,20 +1,21 @@
 package com.epam;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+
 
 import org.junit.Test;
 
-/**
- * Unit test for simple App.
- */
+
 public class AppTest 
 {
-    /**
-     * Rigorous Test :-)
-     */
     @Test
     public void shouldAnswerWithTrue()
     {
-        assertTrue( true );
+        assertTrue( Utils.isAllPositive("12", "79") );
+    }
+    @Test
+    public void shouldAnswerWithFalse()
+    {
+        assertFalse(Utils.isAllPositive((String) null));
     }
 }
