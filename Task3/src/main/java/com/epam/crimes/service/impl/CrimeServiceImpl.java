@@ -40,8 +40,8 @@ public class CrimeServiceImpl implements CrimeService {
             }
         };
 
-        ExecutorService executorService = Executors.newFixedThreadPool(10);
-        for (int i = 0; i < 10; i++) {
+        ExecutorService executorService = Executors.newFixedThreadPool(8);
+        for (int i = 0; i < 8; i++) {
             executorService.execute(loadCrime);
         }
         executorService.shutdown();

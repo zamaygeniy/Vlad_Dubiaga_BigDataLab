@@ -42,12 +42,16 @@ public class JsonUtilsImpl implements JsonUtils {
         connection.connect();
 
         if (connection.getResponseCode() == 429) {
-            logger.error("Connection error. Code: {}. URL: {}", connection.getResponseCode(), url);
+            logger.info("Connection error. Code: {}. URL: {}", connection.getResponseCode(), url);
             throw new ConnectException("Connection error. Code: 429. URL: " + url);
         }
 
         if (connection.getResponseCode() >= 400) {
-            logger.error("Connection error. Code: {}. URL: {}", connection.getResponseCode(), url);
+            if (connection.getResponseCode() == 503) {
+                logger.error("Error. Custom area contains more than 10,000 crimes. Code: {}. URL: {}", connection.getResponseCode(), url);
+            } else {
+                logger.error("Connection error. Code: {}. URL: {}", connection.getResponseCode(), url);
+            }
             return Collections.emptyList();
         }
 
