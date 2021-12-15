@@ -51,7 +51,9 @@ public class CrimeServiceImpl implements CrimeService {
     public void loadCrimeToDatabase(URL url, String category, String date) throws IOException {
         JsonUtils jsonUtils = new JsonUtilsImpl();
         List<Crime> crimes = jsonUtils.parseUrlContent(url, Crime[].class);
-        createCrime(crimes);
+        if (!crimes.isEmpty()) {
+            createCrime(crimes);
+        }
     }
 
     @Override

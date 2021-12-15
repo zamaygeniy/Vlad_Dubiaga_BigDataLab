@@ -36,36 +36,31 @@ public class CrimeDaoImpl extends CrimeDao {
         crime.getLocation().getStreet().setName(resultSet.getString(NAME));
         return crime;
     };
-    private static final String FIND_ALL = """
-            SELECT * FROM crimes_schema.crime
-            LEFT JOIN crimes_schema.outcome_status
-            ON crimes_schema.crime.outcome_status_id = crimes_schema.outcome_status.id
-            JOIN crimes_schema.location
-            ON crimes_schema.crime.latitude = crimes_schema.location.latitude
-            AND crimes_schema.crime.longitude = crimes_schema.location.longitude
-            JOIN crimes_schema.street
-            ON crimes_schema.location.street_id = crimes_schema.street.id
-            """;
-    private static final String INSERT_CRIME = """
-            INSERT INTO crimes_schema.crime(persistent_id, id, location_type, category, latitude, longitude, context, location_subtype, outcome_status_id, month)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            ON CONFLICT DO NOTHING
-            """;
-    private static final String INSERT_STREET = """
-            INSERT INTO crimes_schema.street(name, id)
-            VALUES (?, ?)
-            ON CONFLICT DO NOTHING
-            """;
-    private static final String INSERT_LOCATION = """
-            INSERT INTO crimes_schema.location(latitude, longitude, street_id)
-            VALUES (?, ?, ?)
-            ON CONFLICT DO NOTHING
-            """;
+    private static final String FIND_ALL =
+            "SELECT * FROM crimes_schema.crime " +
+            "LEFT JOIN crimes_schema.outcome_status " +
+            "ON crimes_schema.crime.outcome_status_id = crimes_schema.outcome_status.id " +
+            "JOIN crimes_schema.location " +
+            "ON crimes_schema.crime.latitude = crimes_schema.location.latitude " +
+            "AND crimes_schema.crime.longitude = crimes_schema.location.longitude " +
+            "JOIN crimes_schema.street " +
+            "ON crimes_schema.location.street_id = crimes_schema.street.id";
+    private static final String INSERT_CRIME =
+            "INSERT INTO crimes_schema.crime(persistent_id, id, location_type, category, latitude, longitude, context, location_subtype, outcome_status_id, month) " +
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) " +
+            "ON CONFLICT DO NOTHING ";
+    private static final String INSERT_STREET =
+            "INSERT INTO crimes_schema.street(name, id) " +
+            "VALUES (?, ?) " +
+            "ON CONFLICT DO NOTHING";
+    private static final String INSERT_LOCATION =
+            "INSERT INTO crimes_schema.location(latitude, longitude, street_id) " +
+            "VALUES (?, ?, ?) " +
+            "ON CONFLICT DO NOTHING";
 
-    private static final String INSERT_OUTCOME_STATUS = """
-            INSERT INTO crimes_schema.outcome_status(date, outcome_category)
-            VALUES (?, ?)
-            """;
+    private static final String INSERT_OUTCOME_STATUS =
+            "INSERT INTO crimes_schema.outcome_status(date, outcome_category) " +
+            "VALUES (?, ?)";
 
     public CrimeDaoImpl(FluentJdbc fluentJdbc) {
         super(fluentJdbc);
