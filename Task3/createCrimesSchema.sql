@@ -1,2 +1,1 @@
-CREATE SCHEMA IF NOT EXIST crimes_schema
-
+CREATE SCHEMA IF NOT EXISTS crimes_schema
