@@ -19,9 +19,9 @@ LEFT JOIN
 (SELECT stop.officer_defined_ethnicity, stop.object_of_search,
 COUNT(*) AS number_of_stops, RANK() OVER(PARTITION BY stop.officer_defined_ethnicity ORDER BY COUNT(*) DESC)
 FROM crimes_schema.stop AS stop
-WHERE stop.datetime >= '2021-01-01'::date AND stop.datetime <= '2021-05-01'::date
+WHERE stop.datetime >= :'start_date'::date AND stop.datetime <= :'end_date'::date
 GROUP BY stop.officer_defined_ethnicity, stop.object_of_search) AS most_popular
 ON stop.officer_defined_ethnicity = most_popular.officer_defined_ethnicity AND most_popular.rank = 1
 
-WHERE stop.datetime >= '2021-01-01'::date AND stop.datetime <= '2021-05-01'::date
+WHERE stop.datetime >= :'start_date'::date AND stop.datetime <= :'end_date'::date
 GROUP BY stop.officer_defined_ethnicity, most_popular.object_of_search;

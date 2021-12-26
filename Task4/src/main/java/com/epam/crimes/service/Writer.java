@@ -20,8 +20,6 @@ public class Writer {
         OptionsUtils optionsUtils = new OptionsUtils();
         String fromDate = properties.getProperty("from");
         String toDate = properties.getProperty("to");
-        System.out.println(fromDate);
-        System.out.println(toDate);
 
         if (propertiesValidator.validateDate(fromDate) && propertiesValidator.validateDate(toDate)) {
             if (fromDate.compareTo(toDate) > 0) {
@@ -32,7 +30,6 @@ public class Writer {
             List<String> dates = optionsUtils.getDatesAsList(LocalDate.parse(fromDate + "-01"), LocalDate.parse(toDate + "-01"));
 
             if ("db".equals(properties.getProperty("write"))) {
-                System.out.println(properties.getProperty("write"));
                 writeToDatabase(properties, dates);
             }
             if ("file".equals(properties.getProperty("write"))) {

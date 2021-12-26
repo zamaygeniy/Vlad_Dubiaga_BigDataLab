@@ -9,6 +9,6 @@ JOIN crimes_schema.location AS location
 ON stop.location_id = location.id
 JOIN crimes_schema.street AS street
 ON location.street_name = street.name
-WHERE stop.datetime >= '2021-01-01'::date AND stop.datetime <= '2021-05-01'::date
+WHERE stop.datetime >= :'start_date'::date AND stop.datetime <= :'end_date'::date
 GROUP BY street.name
 ORDER BY street.name
