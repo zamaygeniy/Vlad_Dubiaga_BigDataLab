@@ -111,10 +111,8 @@ public class UrlUtils {
             return new URL(url.toString());
         } catch (MalformedURLException e) {
             logger.error("Failed to create URL: {}", url);
-            e.printStackTrace();
             return null;
         }
-
     }
 
 }

@@ -6,11 +6,8 @@ import com.epam.crimes.dao.Dao;
 import com.epam.crimes.entity.Crime;
 import org.codejargon.fluentjdbc.api.FluentJdbc;
 import org.codejargon.fluentjdbc.api.mapper.Mappers;
-import org.codejargon.fluentjdbc.api.query.Mapper;
 import org.codejargon.fluentjdbc.api.query.Query;
 import org.codejargon.fluentjdbc.api.query.UpdateResultGenKeys;
-
-import static com.epam.crimes.dao.ColumnName.*;
 
 import java.util.List;
 
@@ -18,37 +15,6 @@ public class CrimeDao implements Dao<Crime> {
 
     private FluentJdbc fluentJdbc = DatabaseConnection.getInstance().getFluentJdbc();
 
-    private static final Mapper<Crime> manualCrimeMappper = resultSet -> {
-        Crime crime = new Crime();
-        crime.setPersistentId(resultSet.getString(PERSISTENT_ID));
-        crime.setId(resultSet.getInt(ID));
-        crime.setLocationType(resultSet.getString(LOCATION_TYPE));
-        crime.setCategory(resultSet.getString(CATEGORY));
-        crime.getLocation().setLatitude(resultSet.getDouble(LATITUDE));
-        crime.getLocation().setLongitude(resultSet.getDouble(LONGITUDE));
-        crime.setContext(resultSet.getString(CONTEXT));
-        crime.setLocationSubtype(resultSet.getString(LOCATION_SUBTYPE));
-        crime.setMonth(resultSet.getDate(MONTH));
-        if (resultSet.getDate(DATE) != null) {
-            crime.getOutcomeStatus().setId(resultSet.getInt(OUTCOME_STATUS_ID));
-            crime.getOutcomeStatus().setDate(resultSet.getDate(DATE));
-            crime.getOutcomeStatus().setCategory(resultSet.getString(OUTCOME_CATEGORY));
-        } else {
-            crime.setOutcomeStatus(null);
-        }
-        crime.getLocation().getStreet().setId(resultSet.getInt(STREET_ID));
-        crime.getLocation().getStreet().setName(resultSet.getString(NAME));
-        return crime;
-    };
-    private static final String FIND_ALL =
-            "SELECT * FROM crimes_schema.crime " +
-                    "LEFT JOIN crimes_schema.outcome_status " +
-                    "ON crimes_schema.crime.outcome_status_id = crimes_schema.outcome_status.id " +
-                    "JOIN crimes_schema.location " +
-                    "ON crimes_schema.crime.latitude = crimes_schema.location.latitude " +
-                    "AND crimes_schema.crime.longitude = crimes_schema.location.longitude " +
-                    "JOIN crimes_schema.street " +
-                    "ON crimes_schema.location.street_id = crimes_schema.street.id";
     private static final String INSERT_CRIME =
             "INSERT INTO crimes_schema.crime(persistent_id, id, location_type, category, context, location_subtype, outcome_status_id, month, location_id) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) " +
@@ -64,14 +30,6 @@ public class CrimeDao implements Dao<Crime> {
     private static final String INSERT_OUTCOME_STATUS =
             "INSERT INTO crimes_schema.outcome_status(date, outcome_category) " +
                     "VALUES (?, ?)";
-
-    @Override
-    public List<Crime> findAll() {
-        Query query = fluentJdbc.query();
-        return query
-                .select(FIND_ALL)
-                .listResult(manualCrimeMappper);
-    }
 
     @Override
     public void create(List<Crime> crimes) {

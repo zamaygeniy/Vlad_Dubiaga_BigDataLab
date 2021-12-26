@@ -7,9 +7,12 @@ import com.epam.crimes.exception.UrlConnectionException;
 import com.epam.crimes.util.FileReader;
 import com.epam.crimes.util.UrlUtils;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.*;
@@ -28,11 +31,6 @@ public class CrimeService {
             Dao<Crime> crimeDao = new CrimeDao();
             crimeDao.create(crimeList);
         }
-    }
-
-    public List<Crime> findAll() {
-        CrimeDao crimeDao = new CrimeDao();
-        return crimeDao.findAll();
     }
 
     public void writeToDatabaseFromUrl(URL url) throws UrlConnectionException {
@@ -108,4 +106,28 @@ public class CrimeService {
             entityLoader.shutdownNow();
         }
     }
+
+    public void writeAllCrimesToFile(String path, String category, List<String> dates) throws IOException {
+        UrlUtils urlUtils = new UrlUtils();
+        Queue<URL> urls = new ArrayDeque<>();
+        addCrimeUrlToQueue(path, category, dates, urls);
+        try (FileWriter writer = new FileWriter("data.txt", true)) {
+            while (urls.peek() != null) {
+                URL url = urls.poll();
+                try {
+                    writer.append(urlUtils.getJsonFromUrl(url)); //спросить стоить ли постоянно открывать файл или держать открытым
+                } catch (UrlConnectionException e) {
+                    urls.add(url);
+                }
+            }
+        }
+    }
+
+    private void addCrimeUrlToQueue(String path, String category, List<String> dates, Queue<URL> urls) throws IOException {
+        UrlUtils urlUtils = new UrlUtils();
+        FileReader fileReader = new FileReader();
+        Queue<List<Double>> coordinatesFromFile = fileReader.readCoordinatesFromFile(Paths.get(path));
+        coordinatesFromFile.forEach(coordinates -> dates.forEach(date -> urls.add(urlUtils.createUrlForCrimesStreet(coordinates, category, date))));
+    }
+
 }

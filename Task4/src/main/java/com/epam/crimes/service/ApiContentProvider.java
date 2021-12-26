@@ -19,9 +19,8 @@ public class ApiContentProvider {
             return Collections.emptyList();
         }
 
-        T[] entity;
         try {
-            entity = new GsonBuilder().setDateFormat("yyyy-MM").create().fromJson(content, entityClass);
+            T[] entity = new GsonBuilder().setDateFormat("yyyy-MM").create().fromJson(content, entityClass);
             if (entity != null) {
                 return Arrays.asList(entity);
             }

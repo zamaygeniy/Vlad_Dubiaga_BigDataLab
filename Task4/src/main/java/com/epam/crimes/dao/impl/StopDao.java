@@ -8,7 +8,6 @@ import org.codejargon.fluentjdbc.api.query.Query;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 public class StopDao implements Dao<Stop> {
@@ -32,16 +31,6 @@ public class StopDao implements Dao<Stop> {
             "INSERT INTO crimes_schema.outcome_object(id, name ) " +
                     "VALUES (?, ?) " +
                     "ON CONFLICT DO NOTHING";
-
-
-    @Override
-    public List<Stop> findAll() {
-       /* Query query = fluentJdbc.query();
-        return query
-                .select(FIND_ALL)
-                .listResult(manualStopMappper);*/
-        return null;
-    }
 
     @Override
     public void create(List<Stop> stops) {
@@ -74,8 +63,6 @@ public class StopDao implements Dao<Stop> {
                             .params(stop.getOutcomeObject().getId(), stop.getOutcomeObject().getName())
                             .run();
 
-
-
                     query
                             .update(INSERT_STOP)
                             .params(stop.getType(), stop.getInvolvedPerson(),
@@ -94,6 +81,5 @@ public class StopDao implements Dao<Stop> {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
         return LocalDateTime.parse(date.substring(0, 19), dtf);
     }
-
 
 }

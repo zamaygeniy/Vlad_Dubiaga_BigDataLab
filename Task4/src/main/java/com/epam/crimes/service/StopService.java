@@ -2,12 +2,17 @@ package com.epam.crimes.service;
 
 import com.epam.crimes.dao.Dao;
 import com.epam.crimes.dao.impl.StopDao;
+import com.epam.crimes.entity.ForcesList;
 import com.epam.crimes.entity.Stop;
 import com.epam.crimes.exception.UrlConnectionException;
 import com.epam.crimes.util.UrlUtils;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayDeque;
 import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.*;
 
 //спросить про интерфейс
@@ -97,6 +102,31 @@ public class StopService {
         }
     }
 
+    public void writeAllStopsToFile(String force, List<String> dates) throws IOException {
+        UrlUtils urlUtils = new UrlUtils();
+        Queue<URL> urls = new ArrayDeque<>();
+        addStopUrlToQueue(force, dates, urls);
+        try (FileWriter writer = new FileWriter("data.txt", true)) {
+            while (urls.peek() != null) {
+                URL url = urls.poll();
+                try {
+                    writer.append(urlUtils.getJsonFromUrl(url)); //спросить стоить ли постоянно открывать файл или держать открытым
+                } catch (UrlConnectionException e) {
+                    urls.add(url);
+                }
+            }
+        }
+    }
+
+    private void addStopUrlToQueue(String force, List<String> dates, Queue<URL> urls) {
+        UrlUtils urlUtils = new UrlUtils();
+        ForcesList forcesList = ForcesList.getInstance();
+        if (force.equals("all")) {
+            forcesList.getForcesId().forEach(forceId -> dates.forEach(date -> urls.add(urlUtils.createUrlForStopsForce(forceId, date))));
+        } else {
+            dates.forEach(date -> urls.add(urlUtils.createUrlForStopsForce(force, date)));
+        }
+    }
 
 
 }
