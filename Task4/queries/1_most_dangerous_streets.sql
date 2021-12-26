@@ -4,7 +4,7 @@ JOIN crimes_schema.location AS location
 ON street.name = location.street_name
 JOIN crimes_schema.crime AS crime
 ON location.id = crime.location_id
-WHERE crime.month >= :'start_date'::date AND crime.month =< :'end_date'::date
+WHERE crime.month >= :'start_date'::date AND crime.month <= :'end_date'::date
 GROUP BY street.name, location.id
 ORDER BY crime_count DESC;
 

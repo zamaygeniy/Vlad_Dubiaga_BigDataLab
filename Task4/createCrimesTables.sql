@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS crimes_schema.crime
 
 CREATE TABLE IF NOT EXISTS crimes_schema.outcome_object
 (
-	id character varying(50) PRIMARY KEY,
+	id character varying(100) PRIMARY KEY,
 	name character varying(50)
 );
 

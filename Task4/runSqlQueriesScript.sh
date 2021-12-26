@@ -16,7 +16,7 @@ print_usage () {
 }
 
 print_help () {
-	print_usage_func
+	print_usage
 	echo "Options:"
 	echo "	-h			show help message"
 	echo "	-f [file]		name of the output file"
@@ -39,14 +39,14 @@ while getopts "hf:i:r:" opt; do
 		i)
 			if ! [[ ${OPTARG} =~ $QUERY_INDEX_REGEX ]]; then
                 		echo "$0: invalid script index: ${OPTARG}" >&2
-				print_usage_func
+				print_usage
 				exit 1 
         		fi
 			query_index=${OPTARG};;
 		r)
 			if ! [[ ${OPTARG} =~ $ROWS_NUM_REGEX ]]; then
 				echo "$0: invalid rows number: ${OPTARG}" >&2
-				print_usage_func
+				print_usage
 				exit 1
 			fi
 			rows_num=${OPTARG};;
@@ -54,7 +54,7 @@ while getopts "hf:i:r:" opt; do
 done
 
 if [ $query_index -eq 0 ]; then
-	print_usage_func
+	print_usage
 	echo $query_index
 	exit 1;
 fi

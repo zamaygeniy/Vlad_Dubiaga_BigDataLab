@@ -13,50 +13,62 @@ api=""
 force=""
 
 print_usage () {
-	 echo "$0: usage: [-h] [-v] [-c] [-pg] [-p [path]] [-from] [-to] [-a [api method]] [-fc [force]]"
+	 echo "$0: usage: [-h] [-v] [-c] [-p] [-t [path]] [-r [from] [-o [to]] [-a [api method]] [-e [force]]"
 }
 
-while getopts "hvcpgp:from:to:a:fc:" opt; 
-do
+while getopts "hvcpt:r:o:a:e:" opt; 
+do	
+	echo "$opt"
         case $opt in
-				h)
-                        echo "$0 - help message"
+		h)
+                        echo "$0 - script for writing crimes data into db"
+			print_usage
+			echo "Options:"
+			echo "	-h		print help message"
+			echo "	-v		enable non-script output"
+			echo "	-c		clear database"
+			echo "	-p		package maven project"
+			echo "	-t [path]	coordinates file for 'crimes-street' method"
+			echo "	-r [from]	select start date in format yyyy-MM"
+			echo "	-o [to]		select end date in format yyyy-MM"
+			echo "	-a [api method]	select api method. 'crimes-street' or 'stop-forces'"
+			echo "	-e [force] 	select force for 'stop-forces' method"
                         exit 0;;
                 v)
                         output="/dev/stdout";;
                 c)
                         clear_flag=true;;
-                pg)
-                        package_flag=true;;
                 p)
+                        package_flag=true;;
+                t)
                         path=${OPTARG}
                         if [ ! -f "$path" ]; then
-                        	echo "$0: file not found: $file"
+                        	echo "$0: file not found: $path"
                         	exit 1
                         fi;;
-                from)
+                r)
                         from=${OPTARG}
                         if ! [[ $from =~ $DATE_REGEX ]]; then
                             echo "$0: invalid date: $from"
                             exit 1
                         fi;;
-               	to)
-						to=${OPTARG}
+               	o)
+			to=${OPTARG}
                         if ! [[ $to =~ $DATE_REGEX ]]; then
                         	echo "$0: invalid date: $to"
                         	exit 1
                         fi;;
-				a)
-						api=${OPTARG}
-						if ! [[ $api =~ $API_REGEX ]]; then
-							echo "$0: invalid api method: $api"
-							exit 1
-						fi;;
-				fc)
-						force=${OPTARG};;
-				\?)
-						print_usage
-						exit 1;;
+		a)
+			api=${OPTARG}
+			if ! [[ $api =~ $API_REGEX ]]; then
+			echo "$0: invalid api method: $api"
+			exit 1
+			fi;;
+		e)
+			force=${OPTARG};;
+		\?)
+			print_usage
+			exit 1;;
         esac
 done
 
@@ -90,23 +102,22 @@ fi
 
 case $api in
 	"crimes-street")
-		if [[ -z "$date" ||  -z "$path" ]]; then
+		if [[ -z "$from" || -z "$to" || -z "$path" ]]; then
 			print_usage
 			exit 1
-		else
-			echo "Loading crimes data..."
-			java -cp target/lib/crimes-1.0-SNAPSHOT-jar-with-dependencies.jar com.epam.crimes.control.Main -Dapi=$api -Dpath=$path -Dfrom=$from -Dto=$to > $output 2>&1
+		else	
+			java -cp target/lib/crimes-1.0-SNAPSHOT-jar-with-dependencies.jar com.epam.crimes.control.Main -Dapi=$api -Dpath=$path -Dfrom=$from -Dto=$to -Dwrite=db -Dcategory=all-crimes > $output 2>&1
 		fi;;
 	"stops-force")
-		if [ -z "$date" ]; then
+		if [[ -z "$from" || -z "$to" ]]; then
                         print_usage
                         exit 1
                 fi
 		echo "Loading stops data..."
 		if [ -z "$force" ]; then
-			java -cp target/lib/crimes-1.0-SNAPSHOT-jar-with-dependencies.jar com.epam.crimes.control.Main -Dapi=$api -Dfrom=$from -Dto=$to -Dforce="all" > $output 2>&1
+			java -cp target/lib/crimes-1.0-SNAPSHOT-jar-with-dependencies.jar com.epam.crimes.control.Main -Dapi=$api -Dfrom=$from -Dto=$to -Dforce=all -Dwrite=db
 		else
-			java -cp target/lib/crimes-1.0-SNAPSHOT-jar-with-dependencies.jar com.epam.crimes.control.Main -Dapi=$api -Dfrom=$from -Dto=$to -Dforce=$force > $output 2>&1
+			java -cp target/lib/crimes-1.0-SNAPSHOT-jar-with-dependencies.jar com.epam.crimes.control.Main -Dapi=$api -Dfrom=$from -Dto=$to -Dforce=$force -Dwrite=db > $output 2>&1
 		fi;;
 	*)
 		echo "$0: invalid api option";;

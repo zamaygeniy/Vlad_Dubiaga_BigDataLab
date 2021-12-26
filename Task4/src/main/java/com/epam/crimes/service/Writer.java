@@ -43,6 +43,7 @@ public class Writer {
         UrlUtils urlUtils = new UrlUtils();
         switch (properties.getProperty("api")) {
             case "stops-force":
+		System.out.println("!");
                 String force = properties.getProperty("force");
                 addStopUrlToQueue(force, dates, urls);
                 break;
