@@ -2,10 +2,9 @@ package com.epam.crimes.service;
 
 import com.epam.crimes.dao.Dao;
 import com.epam.crimes.dao.impl.StopDao;
-import com.epam.crimes.entity.Force;
 import com.epam.crimes.entity.Stop;
 import com.epam.crimes.exception.UrlConnectionException;
-import com.epam.crimes.service.UrlUtils;
+import com.epam.crimes.util.UrlUtils;
 
 import java.net.URL;
 import java.util.List;
@@ -30,7 +29,8 @@ public class StopService {
 
     public void writeToDatabaseFromUrl(URL url) throws UrlConnectionException {
         UrlUtils urlUtils = new UrlUtils();
-        List<Stop> stops = urlUtils.parseUrlContent(url, Stop[].class);
+        ApiContentProvider apiContentProvider = new ApiContentProvider();
+        List<Stop> stops = apiContentProvider.parseJsonContent(urlUtils.getJsonFromUrl(url), Stop[].class);
         if (!stops.isEmpty()) {
             create(stops);
         }
@@ -57,6 +57,7 @@ public class StopService {
         Runnable writeStop = () -> {
             while (urls.peek() != null) {
                 URL url = urls.poll();
+                System.out.println(url);
                 try {
                     writeToDatabaseFromUrl(url);
                 } catch (UrlConnectionException e) {

@@ -1,7 +1,6 @@
-package com.epam.crimes.service;
+package com.epam.crimes.util;
 
 import com.epam.crimes.exception.UrlConnectionException;
-import com.google.gson.GsonBuilder;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,54 +18,6 @@ public class UrlUtils {
     private static final Logger logger = LoggerFactory.getLogger(UrlUtils.class);
 
     private static final String API_METHOD = "https://data.police.uk/api/";
-
-    public <T> List<T> parseUrlContent(URL url, Class<T[]> entityClass) throws UrlConnectionException {
-
-        if (url == null) {
-            logger.error("URL is null");
-            return Collections.emptyList();
-        }
-
-        try {
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            if (url.toString().length() >= 4094) {
-                connection.setRequestMethod("POST");
-            } else {
-                connection.setRequestMethod("GET");
-            }
-
-            connection.connect();
-
-            if (connection.getResponseCode() == 429 || connection.getResponseCode() == 500) {
-                logger.info("Connection error. Code: {}. URL: {}", connection.getResponseCode(), url);
-                throw new UrlConnectionException("Connection error. Code: " + connection.getResponseCode() + ". URL: " + url);
-            }
-
-            if (connection.getResponseCode() >= 400) {
-                if (connection.getResponseCode() == 503) {
-                    logger.error("Error. Custom area contains more than 10,000 crimes. Code: {}. URL: {}", connection.getResponseCode(), url);
-                } else {
-                    logger.error("Connection error. Code: {}. URL: {}", connection.getResponseCode(), url);
-                }
-                return Collections.emptyList();
-            }
-
-            T[] entity;
-            try (BufferedInputStream in = new BufferedInputStream(connection.getInputStream())) {
-                String content = IOUtils.toString(in, StandardCharsets.UTF_8);
-                entity = new GsonBuilder().setDateFormat("yyyy-MM").create().fromJson(content, entityClass);
-            }
-            if (entity != null) {
-                return Arrays.asList(entity);
-            } else {
-                logger.error("No valid data from: {}", url);
-                return Collections.emptyList();
-            }
-        } catch (IOException e) {
-            logger.error("Connection error. URL: {}", url);
-            return Collections.emptyList();
-        }
-    }
 
     public String getJsonFromUrl(URL url) throws UrlConnectionException {
         if (url == null) {

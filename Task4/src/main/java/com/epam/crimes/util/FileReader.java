@@ -18,9 +18,7 @@ public class FileReader {
 
     public static final String DOUBLE_REGEX = "-?\\d+\\.?\\d+";
 
-    public static final Logger logger = LoggerFactory.getLogger(FileReader.class);
-
-    public Queue<List<Double>> readCoordinatesFromFile(Path path) {
+    public Queue<List<Double>> readCoordinatesFromFile(Path path) throws IOException {
         ConcurrentLinkedQueue<List<Double>> queue = new ConcurrentLinkedQueue<>();
         try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
             String line = reader.readLine();
@@ -36,9 +34,6 @@ public class FileReader {
                 }
                 line = reader.readLine();
             }
-        } catch (IOException e) {
-            logger.error("File access error. File: {}", path);
-            //TODO throw exception
         }
         return queue;
     }

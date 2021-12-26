@@ -5,7 +5,9 @@ import com.epam.crimes.dao.impl.CrimeDao;
 import com.epam.crimes.entity.Crime;
 import com.epam.crimes.exception.UrlConnectionException;
 import com.epam.crimes.util.FileReader;
+import com.epam.crimes.util.UrlUtils;
 
+import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.List;
@@ -35,13 +37,14 @@ public class CrimeService {
 
     public void writeToDatabaseFromUrl(URL url) throws UrlConnectionException {
         UrlUtils urlUtils = new UrlUtils();
-        List<Crime> crimes = urlUtils.parseUrlContent(url, Crime[].class);
+        ApiContentProvider apiContentProvider = new ApiContentProvider();
+        List<Crime> crimes = apiContentProvider.parseJsonContent(urlUtils.getJsonFromUrl(url), Crime[].class);
         if (!crimes.isEmpty()) {
             create(crimes);
         }
     }
 
-    public void writeAllCrimesToDatabase(Path path, String category, List<String> dates) throws InterruptedException {
+    public void writeAllCrimesToDatabase(Path path, String category, List<String> dates) throws InterruptedException, IOException {
 
         FileReader reader = new FileReader();
         UrlUtils urlUtils = new UrlUtils();

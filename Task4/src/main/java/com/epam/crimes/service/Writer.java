@@ -5,6 +5,7 @@ import com.epam.crimes.exception.UrlConnectionException;
 import com.epam.crimes.exception.WriterException;
 import com.epam.crimes.util.FileReader;
 import com.epam.crimes.util.OptionsUtils;
+import com.epam.crimes.util.UrlUtils;
 import com.epam.crimes.validator.PropertiesValidator;
 
 import java.io.FileWriter;
@@ -15,7 +16,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 public class Writer {
-    public void write(Properties properties) throws InterruptedException, WriterException {
+    public void write(Properties properties) throws InterruptedException, WriterException, IOException {
         PropertiesValidator propertiesValidator = new PropertiesValidator();
         OptionsUtils optionsUtils = new OptionsUtils();
         String fromDate = properties.getProperty("from");
@@ -38,12 +39,11 @@ public class Writer {
         }
     }
 
-    private void writeToFile(Properties properties, List<String> dates) throws WriterException {
+    private void writeToFile(Properties properties, List<String> dates) throws WriterException, IOException {
         Queue<URL> urls = new ArrayDeque<>();
         UrlUtils urlUtils = new UrlUtils();
         switch (properties.getProperty("api")) {
             case "stops-force":
-		System.out.println("!");
                 String force = properties.getProperty("force");
                 addStopUrlToQueue(force, dates, urls);
                 break;
@@ -63,15 +63,14 @@ public class Writer {
                 }
             }
         } catch (IOException e){
-            throw new WriterException(e);
+            throw new WriterException("File access error" ,e);
         }
 
 
     }
 
-    private void writeToDatabase(Properties properties, List<String> dates) throws InterruptedException {
+    private void writeToDatabase(Properties properties, List<String> dates) throws InterruptedException, IOException {
         PropertiesValidator propertiesValidator = new PropertiesValidator();
-        System.out.println(properties.getProperty("api"));
         switch (properties.getProperty("api")) {
             case "stops-force":
                 StopService stopService = new StopService();
@@ -88,8 +87,6 @@ public class Writer {
                 stopService.writeAllStopsToDatabase(forces, dates);
                 break;
             case "crimes-street":
-                System.out.println(properties.getProperty("path"));
-                System.out.println(properties.getProperty("category"));
                 CrimeService crimeService = new CrimeService();
                 String path = properties.getProperty("path");
                 String category = properties.getProperty("category");
@@ -101,7 +98,7 @@ public class Writer {
     }
 
 
-    private void addCrimeUrlToQueue(String path, String category, List<String> dates, Queue<URL> urls) {
+    private void addCrimeUrlToQueue(String path, String category, List<String> dates, Queue<URL> urls) throws IOException {
         UrlUtils urlUtils = new UrlUtils();
         PropertiesValidator propertiesValidator = new PropertiesValidator();
         if (propertiesValidator.validatePath(path)) {

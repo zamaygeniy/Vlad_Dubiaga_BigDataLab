@@ -1,8 +1,8 @@
 package com.epam.crimes.entity;
 
 import com.epam.crimes.exception.UrlConnectionException;
-import com.epam.crimes.exception.WriterException;
-import com.epam.crimes.service.UrlUtils;
+import com.epam.crimes.service.ApiContentProvider;
+import com.epam.crimes.util.UrlUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +17,8 @@ public class ForcesList {
         forces = new ArrayList<>();
         try {
             UrlUtils urlUtils = new UrlUtils();
-            forces.addAll(urlUtils.parseUrlContent(urlUtils.createUrlForListOfForces(), Force[].class));
+            ApiContentProvider apiContentProvider = new ApiContentProvider();
+            forces.addAll(apiContentProvider.parseJsonContent(urlUtils.getJsonFromUrl(urlUtils.createUrlForListOfForces()), Force[].class));
         } catch (UrlConnectionException e) {
             logger.error("Failed to create list of forces");
         }
