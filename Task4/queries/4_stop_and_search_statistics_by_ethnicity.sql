@@ -3,22 +3,22 @@ SELECT
 	COUNT(*) AS total_number,
 	round(
 		COUNT(CASE WHEN outcome_object.name = 'Arrest' 
-				   THEN 1 
-				   ELSE null 
+			   THEN 1 
+			   ELSE null 
 		      END) * 100.0 / COUNT(*), 4
 	) AS arrest_percentage,
 	round(
 		COUNT(CASE WHEN outcome_object.name = 'A no further action disposal' 
-				   THEN 1 
-				   ELSE null 
-			  END) * 100.0 / COUNT(*), 4
+			   THEN 1 
+			   ELSE null 
+		      END) * 100.0 / COUNT(*), 4
 	) AS no_action_percentage,
 	round(
 		COUNT(CASE WHEN outcome_object.name != 'A no further action disposal' 
-				   AND outcome_object.name != 'Arrest'  
-				   THEN 1 
-				   ELSE null 
-			  END) * 100.0 / COUNT(*), 4
+			   AND outcome_object.name != 'Arrest'  
+			   THEN 1 
+			   ELSE null 
+		      END) * 100.0 / COUNT(*), 4
 	) AS other_percentage,
 	most_popular.object_of_search AS most_popular_object_of_search
 

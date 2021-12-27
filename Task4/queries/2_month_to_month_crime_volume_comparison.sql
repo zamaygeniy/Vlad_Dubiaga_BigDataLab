@@ -3,10 +3,10 @@ WITH crimes_for_month AS (
 		crime.category AS category, 
 		crime.month AS month, 
 		COUNT(CASE WHEN crime.month >= :'start_date'::date 
-				   AND crime.month <= :'end_date'::date 
-				   THEN 1
-				   ELSE NULL
-			  END) AS current_month_count
+		           AND crime.month <= :'end_date'::date 
+			   THEN 1
+			   ELSE NULL
+		      END) AS current_month_count
 	FROM crimes_schema.crime
 	GROUP BY crime.category, crime.month
 	ORDER BY crime.category DESC
