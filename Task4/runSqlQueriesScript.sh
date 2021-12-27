@@ -53,26 +53,26 @@ while getopts "hf:i:r:" opt; do
 	esac
 done
 
-if [ $query_index -eq 0 ]; then
+if [ "$query_index" -eq 0 ]; then
 	print_usage
-	echo $query_index
+	echo "$query_index"
 	exit 1;
 fi
 
-case $query_index in
+case "$query_index" in
 	1)
-		psql -d crimes -f "queries/1_most_dangerous_streets.sql" -v start_date=$START_DATE -v end_date=$END_DATE > $output_file;;
+		psql -d crimes -f "queries/1_most_dangerous_streets.sql" -v start_date=$START_DATE -v end_date=$END_DATE > "$output_file";;
 	2)
-		psql -d crimes -f "queries/2_month_to_month_crime_volume_comparison.sql" -v start_date=$START_DATE -v end_date=$END_DATE > $output_file;;
+		psql -d crimes -f "queries/2_month_to_month_crime_volume_comparison.sql" -v start_date=$START_DATE -v end_date=$END_DATE > "$output_file";;
 	3)
-		psql -d crimes -f "queries/3_crimes_with_specified_outcome_status.sql" -v start_date=$START_DATE -v end_date=$END_DATE -v outcome_category="$OUTCOME_CATEGORY" > $output_file;;
+		psql -d crimes -f "queries/3_crimes_with_specified_outcome_status.sql" -v start_date=$START_DATE -v end_date=$END_DATE -v outcome_category="$OUTCOME_CATEGORY" > "$output_file";;
 	4)
-		psql -d crimes -f "queries/4_stop_and_search_statistics_by_ethnicity.sql" -v start_date=$START_DATE -v end_date=$END_DATE > $output_file;;
+		psql -d crimes -f "queries/4_stop_and_search_statistics_by_ethnicity.sql" -v start_date=$START_DATE -v end_date=$END_DATE > "$output_file";;
 	5)
-		psql -d crimes -f "queries/5_most_probable_stop_and_search_snapshot_on_street_level.sql" -v start_date=$START_DATE -v end_date=$END_DATE > $output_file;;
+		psql -d crimes -f "queries/5_most_probable_stop_and_search_snapshot_on_street_level.sql" -v start_date=$START_DATE -v end_date=$END_DATE > "$output_file";;
 	6)
-		psql -d crimes -f "queries/6_stop_and_search_correlation_with_crimes.sql" -v start_date=$START_DATE -v end_date=$END_DATE > $output_file;;
+		psql -d crimes -f "queries/6_stop_and_search_correlation_with_crimes.sql" -v start_date=$START_DATE -v end_date=$END_DATE > "$output_file";;
 esac
 
 (( rows_num += 2 ))
-head -n $rows_num $output_file
+head -n $rows_num "$output_file"
